@@ -1,0 +1,65 @@
+Private Function polaczTablice2D(pierwszyIndeks As Byte, tablice() As Variant) As Variant()
+    Const NAZWA_METODY As String = "polaczTablice2D"
+    '------------------------------------------------------------------------------------------------------
+    Dim tablica As Variant
+    Dim polaczone() As Variant
+    Dim licznikKolumn As Long
+    Dim lngMaksymalnaKolumna As Long
+    Dim lngWiersze As Long
+    Dim lngWierszWyniku As Long
+    Dim lngWierszZrodlowy As Long
+    Dim lngKolumnaWyniku As Long
+    Dim lngKolumnaZrodlowa As Long
+    '------------------------------------------------------------------------------------------------------
+
+
+    'Pętla przechodząca przez wszystkie przekazane do funkcji tablice dwuwymiarowe, której celem --------|
+    'jest zliczenie łącznej liczby wierszy oraz wyznaczenie maksymalnej liczby kolumn we wszystkich     '|
+    'tych tablicach.                                                                                    '|
+    For Each tablica In tablice                                                                         '|
+        licznikKolumn = UBound(tablica, 1) - LBound(tablica, 1) + 1                                     '|
+        If licznikKolumn > lngMaksymalnaKolumna Then lngMaksymalnaKolumna = licznikKolumn               '|
+        lngWiersze = lngWiersze + UBound(tablica, 2) - LBound(tablica, 2) + 1                           '|
+    Next tablica                                                                                        '|
+    '----------------------------------------------------------------------------------------------------|
+
+
+    'Tworzy tymczasową tablicę dwuwymiarową indeksowaną od liczby wskazanej w argumencie wejściowym -----|
+    '[pierwszyIndeks], posiadającą dokładnie tyle wierszy, ile wynosi łączna liczba wierszy wszystkich  '|
+    'tablic przekazanych do funkcji oraz tyle kolumn, ile tablica źródłowa z największą liczbą kolumn.  '|
+    'and columns worked out before.                                                                     '|
+    ReDim Preserve polaczone(pierwszyIndeks To lngMaksymalnaKolumna + pierwszyIndeks - 1, _
+                             pierwszyIndeks To lngWiersze + pierwszyIndeks - 1)                         '|
+    '----------------------------------------------------------------------------------------------------|
+
+
+    'Pętla wykonywana dla każdej tablicy źródłowej, wrzucająca wszystkie jej elementy do ----------------|
+    'tablicy wynikowej.                                                                                 '|
+    lngWierszWyniku = pierwszyIndeks                                                                    '|
+    For Each tablica In tablice                                                                         '|
+                                                                                                        '|
+        '--------------------------------------------------------------------------------------------|  '|
+        For lngWierszZrodlowy = LBound(tablica, 2) To UBound(tablica, 2)                            '|  '|
+            lngKolumnaWyniku = pierwszyIndeks                                                       '|  '|
+                                                                                                    '|  '|
+            '------------------------------------------------------------------------------------|  '|  '|
+            For lngKolumnaZrodlowa = LBound(tablica, 1) To UBound(tablica, 1)                   '|  '|  '|
+                polaczone(lngKolumnaWyniku, lngWierszWyniku) = tablica(lngKolumnaZrodlowa, _
+                                                                            lngWierszZrodlowy)  '|  '|  '|
+                lngKolumnaWyniku = lngKolumnaWyniku + 1                                         '|  '|  '|
+            Next lngKolumnaZrodlowa                                                             '|  '|  '|
+            '------------------------------------------------------------------------------------|  '|  '|
+                                                                                                    '|  '|
+            lngWierszWyniku = lngWierszWyniku + 1                                                   '|  '|
+                                                                                                    '|  '|
+        Next lngWierszZrodlowy                                                                      '|  '|
+        '--------------------------------------------------------------------------------------------|  '|
+                                                                                                        '|
+    Next tablica                                                                                        '|
+    '----------------------------------------------------------------------------------------------------|
+
+
+    polaczTablice2D = polaczone
+
+
+End Function
